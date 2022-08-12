@@ -1,0 +1,49 @@
+$positionBarHeight:50px;
+.xl-position-bar{
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $positionBarHeight;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  z-index: 9999;
+  padding: 10px;
+  overflow: hidden;
+  a{
+    margin-right: 10px;
+  }
+}
+.xl-main-content{
+  position: relative;
+  margin-top: $positionBarHeight;
+}
+
+
+
+form{
+  padding: 10px;
+  transform: scale(1);
+  label{
+    font-size: 18px;
+    margin-right: 20px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    span{
+      margin-right: 10px;
+      &:after{
+        content: ':';
+      }
+    }
+    input{
+      font-size: 16px;
+      height: 30px;
+      //margin: 0 10px;
+      margin-right: 10px;
+    }
+  }
+
+}
