@@ -1,5 +1,6 @@
 import '../styles/index.css';
 import OperationButton from "../components/OperationButton";
+
 function App() {
     return <>
         <div className='xl-operation-bar'>
@@ -12,6 +13,7 @@ function App() {
         <div className='xl-operation-bar'>
             <OperationButton to='/rename'>重命名</OperationButton>
             <OperationButton to='/setting'>设置</OperationButton>
+            <OperationButton to='/logs'>日志</OperationButton>
         </div>
     </>
 }

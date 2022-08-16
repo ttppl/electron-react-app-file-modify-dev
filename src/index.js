@@ -12,6 +12,7 @@ import RenameToTopName from "./pages/RenameToTopName";
 import MoveToDir from "./pages/MoveToDir";
 import CompositeOperation from "./pages/CompositeOperation";
 import Setting from "./pages/Setting";
+import Logs from "./pages/Logs";
 
 export const routers = [{
     label:'主页',
@@ -49,6 +50,10 @@ export const routers = [{
         label:'设置',
         path:'/setting',
         element:<Setting/>,
+    },{
+        label:'日志',
+        path:'/logs',
+        element:<Logs/>,
     }]
 }]
 

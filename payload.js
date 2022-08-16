@@ -13,8 +13,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     showError: (title, content) => ipcRenderer.invoke('showError', title, content),
     selectFile: (path) => ipcRenderer.invoke('selectFile', path),
     selectFilePath: (path) => ipcRenderer.invoke('selectFilePath', path),
-    getFiles: (path, all) => ipcRenderer.invoke('getFiles', path, all),
+    getFiles: (path, all,filter) => ipcRenderer.invoke('getFiles', path, all,filter),
     renameFile: (filePath, newName, keepOrigName) => ipcRenderer.invoke('renameFile', filePath, newName, keepOrigName),
     unzipFile: (filePath, targetPath) => ipcRenderer.invoke('unzipFile', filePath, targetPath),
     moveFile: (filePath, targetDir) => ipcRenderer.invoke('moveFile', filePath, targetDir),
+    getLog: (page) => ipcRenderer.invoke('getLog',page),
 })

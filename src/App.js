@@ -1,23 +1,40 @@
 import './App.scss';
 import {Link, Outlet, useLocation} from "react-router-dom";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo} from "react";
+import {routers} from './index'
 
+function getRouterLabel(path, rs = routers) {
+    for (let router of rs) {
+        if (router.path === path) {
+            return router.label
+        }
+        if (router.children) {
+            const chiLabel = getRouterLabel(path, router.children)
+            if (chiLabel) {
+                return chiLabel
+            }
+        }
+    }
+}
 
 function App() {
     const location = useLocation()
-    // console.log(location)
-    const position = useMemo(()=>{
+    const position = useMemo(() => {
         const paths = location.pathname.split('/')
-        return paths.map((p,index)=>{
-            if(index===0){
-                return <Link key='index-link' to='/'>index</Link>
-            }else {
-                if (p) {
-                    return <Link key={`link-${p}-${index}`} to={paths.slice(0, index).join('/')}>{p}</Link>
+        return paths.map((p, index) => {
+            if (index === 0) {
+                return <Link key='index-link' to='/'>{getRouterLabel('/')}</Link>
+            } else {
+                if(p) {
+                    const path = paths.slice(0, index + 1).join('/')
+                    if(path === location.pathname){
+                        return <span key={`link-${p}-${index}`}>{getRouterLabel(path)}</span>
+                    }
+                    return <Link key={`link-${p}-${index}`} to={path}>{getRouterLabel(path)}</Link>
                 }
             }
         })
-    },[location])
+    }, [location])
 
     return <>
         <div className='xl-position-bar'>

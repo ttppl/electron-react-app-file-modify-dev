@@ -18,8 +18,8 @@ function getConfig (key) {
 }
 
 function modifyConfig (key,value) {
-    if(isObject(key)){
-        return modifyConfigFile(key)
+    if(!key){
+        return modifyConfigFile(value)
     }
     const configFile = fs.readFileSync(path.join(__dirname, 'config.json'),'utf-8')
     const config = JSON.parse(configFile)

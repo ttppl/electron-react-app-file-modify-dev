@@ -2,9 +2,24 @@ const {ipcMain, dialog, BrowserWindow, Notification} = require("electron");
 const {getConfig, modifyConfig} = require("./utils");
 const path = require("path");
 const fs = require("fs");
+const readline = require("readline");
 
 function showNotification(msg, title = '提示') {
     new Notification({title, body: msg}).show()
+    writeLog(msg)
+}
+
+
+const onceMap = new Map()
+
+function showDialogMsgDebounce(msg) {
+    if (!onceMap.get(msg)) {
+        dialog.showErrorBox(msg, '')
+        onceMap.set(msg,setTimeout(() => {
+            onceMap.delete(msg)
+        }, 1000))
+    }
+
 }
 
 // 获取文件名
@@ -61,76 +76,94 @@ function getFileDir(filePath) {
 
 // 日志打印
 function writeLog(...arg) {
-    if(getConfig('writeLog')) {
+    if (getConfig('writeLog')) {
         fs.appendFileSync('./log', `${new Date().toLocaleString()}:\n` + arg.join('\n') + '\n')
     }
 }
 
 //递归获取目录下所有文件
-function getAllFiles(filePath, name) {
+function getAllFiles(filePath, filter,name) {
     try {
         filePath = path.resolve(filePath)
         const files = []
         const fileNames = fs.readdirSync(filePath)
-        fileNames.forEach(fileName => {
+        const max = getConfig('maxShowFile')
+        for (let fileName of fileNames) {
             const subPath = path.join(filePath, fileName)
-            let dir = fs.statSync(subPath)
-            if (dir.isDirectory()) {
-                files.push(...getAllFiles(subPath, name || fileName))
+            let dir = null
+            try {
+                dir = fs.statSync(subPath)
+            } catch (e) {
+                writeLog(`文件信息获取错误(${filePath})：${e.stack}`)
+            }
+            if (dir?.isDirectory()) {
+                files.push(...getAllFiles(subPath, filter,name || fileName))
             } else {
-                files.push({
-                    topName: name,
+                const fileModel = {
+                    topName: name || getFileName(filePath),
                     name: getFileName(fileName),
                     fullName: fileName,
                     suffix: getFileSuffix(subPath),
                     parent: getFileDir(subPath),
                     path: subPath
-                })
+                }
+                if(!filter||filter(fileModel)) {
+                    files.push(fileModel)
+                }
             }
-        })
+            if (files.length > max) {
+                showDialogMsgDebounce(`文件过多！大于(${max})`)
+                return files
+            }
+        }
         return files
     } catch (error) {
-        showNotification(`文件获取错误(${filePath})：`, error.stack)
+        writeLog(`文件获取错误(${filePath})：`, error.stack)
         return []
     }
 
 }
 
 //获取目录下文件(包含目录)
-function getDirFiles(filePath) {
+function getDirFiles(filePath,filter) {
+    const files = []
+    const max = getConfig('maxShowFile')
     try {
         // console.log(fs.statSync(filePath))
         if (!fs.statSync(filePath).isDirectory()) {
             showNotification(`[${filePath}]不是目录!`)
         }
         filePath = path.resolve(filePath)
-        const files = []
+
         const fileNames = fs.readdirSync(filePath)
-        fileNames.forEach(fileName => {
+        for(let fileName of fileNames){
             const subPath = path.join(filePath, fileName)
-            let dir = fs.statSync(subPath)
-            if (dir.isDirectory()) {
-                files.push({
-                    name: getFileName(fileName),
-                    fullName: fileName,
-                    dir: true,
-                    path: subPath
-                })
-            } else {
-                files.push({
-                    name: getFileName(fileName),
-                    fullName: fileName,
-                    dir: false,
-                    suffix: getFileSuffix(subPath),
-                    parent: getFileDir(subPath),
-                    path: subPath
-                })
+            let dir = null
+            try {
+                dir = fs.statSync(subPath)
+            } catch (e) {
+                writeLog(`文件信息获取错误(${filePath})：${e.stack}`)
             }
-        })
+            const fileModel = {
+                name: getFileName(fileName),
+                fullName: fileName,
+                dir: !!dir?.isDirectory(),
+                suffix: getFileSuffix(subPath),
+                parent: getFileDir(subPath),
+                path: subPath
+            }
+            if(!filter||filter(fileModel)) {
+                files.push(fileModel)
+            }
+            if (files.length > max) {
+                showDialogMsgDebounce(`文件过多！大于(${max})`)
+                return files
+            }
+        }
         return files
     } catch (error) {
-        showNotification(`文件获取错误(${filePath})：`, error.stack)
-        return []
+        writeLog(`文件获取错误(${filePath})：${error.stack}`)
+        return files
     }
 
 }
@@ -161,6 +194,42 @@ function createDir(dir) {
         createDir(getFileDir(dir))
         fs.mkdirSync(dir)
     }
+}
+
+//读取日志
+function getLog(page){
+    const pageSize = getConfig('logPageSize')
+    return new Promise((resolve,reject)=>{
+        const rl = readline.createInterface({
+            input: fs.createReadStream('./log'),
+            output: process.stdout,
+            terminal: false
+        });
+        let lineCount = 0
+        let lines = []
+        rl.on('line', (line) => {
+            lineCount++
+            if(page){
+                if(lineCount>pageSize*(page-1)){
+                    if(lineCount>pageSize*page){
+                        resolve({lineCount,lines})
+                        rl.close()
+                        return
+                    }
+                    lines.push(line)
+                }
+            }else {
+                if(lineCount%pageSize===1){
+                    lines = []
+                }
+                lines.push(line)
+            }
+
+        });
+        rl.on('close', () => {
+            resolve({lineCount,pages:Math.ceil(lineCount/pageSize), lines})
+        });
+    })
 }
 
 const oprations = {
@@ -231,12 +300,12 @@ const oprations = {
     },
     showMessage: (e, options) => {
         if (options) {
-            dialog.showMessageBox(options)
+            return dialog.showMessageBox(options)
         }
     },
     // 获取文件列表
-    getFiles: (e, filePath, all) => {
-        return all ? getAllFiles(filePath) : getDirFiles(filePath)
+    getFiles: (e, filePath, all,filter) => {
+        return all ? getAllFiles(filePath,filter) : getDirFiles(filePath,filter)
     },
     // 重命名文件
     renameFile: (e, filePath, newName, keepOrigName) => {
@@ -322,7 +391,8 @@ const oprations = {
 
             })
         })
-    }
+    },
+    getLog:(e,page)=>getLog(page)
 }
 
 module.exports = () => {

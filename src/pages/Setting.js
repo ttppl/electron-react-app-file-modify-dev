@@ -111,11 +111,11 @@ function Setting() {
     const submit = async () => {
         setGlobalLoading(true)
         if(isObject(config)) {
-            await electronApi().setConfig(config)
+            await electronApi().setConfig(null,config)
         }else {
             try {
                 const configObj = JSON.parse(config)
-                await electronApi().setConfig(configObj)
+                await electronApi().setConfig(null,configObj)
             }catch {
                 setGlobalLoading(false)
                 showError('格式不正确！')

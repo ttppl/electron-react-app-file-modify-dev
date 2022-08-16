@@ -1,5 +1,35 @@
-.xl-file-view-path{
-    padding: 10px;
+.xl-file-view-nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .xl-file-view-path{
+        padding: 10px;
+    }
+    .xl-file-view-nav-operation{
+        display: flex;
+        align-items: center;
+        padding-right: 40px;
+        >*{
+            margin: 0 10px;
+        }
+        .xl-file-recursive{
+            display: flex;
+            align-items: center;
+            input{
+                $inputSize:20px;
+                width: $inputSize;
+                height: $inputSize;
+                margin-right: 10px;
+            }
+        }
+        .xl-file-viewType{
+            select{
+                width: 80px;
+                height: 30px;
+            }
+        }
+    }
+
 }
 .xl-file-view-container{
     .xl-file{

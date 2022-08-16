@@ -2,7 +2,7 @@
 	"defaultPath": {
 		"name": "默认文件夹",
 		"type": "dir",
-		"value": "C:\\Users\\liuzhixin\\Desktop\\新建文件夹\\target - 原始 - 副本 (2)"
+		"value": "C:\\Users\\liuzhixin\\Desktop\\新建文件夹\\target"
 	},
 	"defaultMoveTargetPath": {
 		"name": "默认移动集中文件夹",
@@ -63,5 +63,20 @@
 	"password": {
 		"name": "默认解压缩密码",
 		"value": "111111"
+	},
+	"replaceSpecialFileWord": {
+		"name": "文件名特殊文本替换",
+		"value": [
+			"[www.baidu.com]",
+			"123"
+		]
+	},
+	"maxShowFile": {
+		"name": "最大显示文件数",
+		"value": 1000
+	},
+	"logPageSize": {
+		"name": "日志显示每页行数",
+		"value": 30
 	}
 }

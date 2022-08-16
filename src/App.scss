@@ -31,9 +31,13 @@ form{
     margin-right: 20px;
     display: inline-flex;
     align-items: center;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-width: 100%;
     cursor: pointer;
     span{
       margin-right: 10px;
+      white-space: nowrap;
       &:after{
         content: ':';
       }
@@ -42,8 +46,16 @@ form{
       font-size: 16px;
       height: 30px;
       //margin: 0 10px;
-      margin-right: 10px;
+      //margin-right: 10px;
     }
+  }
+  button{
+    display: inline-block;
+    padding: 8px 16px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    word-break: keep-all;
+    cursor: pointer;
   }
 
 }
