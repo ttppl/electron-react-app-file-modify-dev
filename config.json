@@ -2,12 +2,12 @@
 	"defaultPath": {
 		"name": "默认文件夹",
 		"type": "dir",
-		"value": "C:\\Users\\liuzhixin\\Desktop\\新建文件夹\\target"
+		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target"
 	},
 	"defaultMoveTargetPath": {
 		"name": "默认移动集中文件夹",
 		"type": "dir",
-		"value": "C:/Users/liuzhixin/Desktop/新建文件夹/target2"
+		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target2"
 	},
 	"winRarPath": {
 		"name": "winrar目录",

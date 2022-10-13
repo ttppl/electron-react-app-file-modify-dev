@@ -64,7 +64,7 @@ function RecursiveFileOperationFun(props,ref) {
         </div>
         <div className='xl-recursive-operation-content'>
             {props.children}
-            <FileView ref={fileRef} fullControl recursive showPath viewType='list'/>
+            <FileView ref={fileRef} fullControl recursive showPath viewType='list' hideCompleteFile={props.hideCompleteFile}/>
         </div>
     </div>
 }

@@ -1,6 +1,7 @@
 import {joinPath} from "./convert";
 
 export const renameUnzippableFileOperation = async ({files, setFiles,unzippableFile}) => {
+    let find = false
     for (let file of files) {
         const type = unzippableFile.find(item => item.suffix === file.suffix)
         if(type) {
@@ -9,8 +10,10 @@ export const renameUnzippableFileOperation = async ({files, setFiles,unzippableF
             await await window.electronAPI.renameFile(file.path, file.name + type.to)
             file.done = true
             setFiles([...files])
+            find = true
         }
     }
+    return find
 }
 
 export const unzipFileOperation = async ({files, setFiles,unzipableFile,multipleThreadUnzip}) => {

@@ -29,13 +29,11 @@ function CompositeOperation() {
     }, [])
 
     const confirm = async ({files, setFiles}) => {
-        await renameUnzippableFileOperation({files, setFiles,unzippableFile:zipFile.current})
-        files = await ref.current.getFiles()
-        await unzipFileOperation({files, setFiles,unzipableFile:unzipableFile.current})
-        files = await ref.current.getFiles()
-        await renameUnzippableFileOperation({files, setFiles,unzippableFile:zipFile.current})
-        files = await ref.current.getFiles()
-        await unzipFileOperation({files, setFiles,unzipableFile:unzipableFile.current})
+        while(await renameUnzippableFileOperation({files, setFiles,unzippableFile:zipFile.current})){
+            files = await ref.current.getFiles()
+            await unzipFileOperation({files, setFiles,unzipableFile:unzipableFile.current})
+            files = await ref.current.getFiles()
+        }
         files = await ref.current.getFiles()
         await renameToTopNameOperation({files, setFiles,keepOrigName:keepOrigName.current})
         files = await ref.current.getFiles()
@@ -44,6 +42,7 @@ function CompositeOperation() {
 
     const ref = useRef(null)
     return <RecursiveFileOperation ref={ref} confirm={confirm}
+                                   hideCompleteFile={false}
                                    operations={<OperationButton done={targetDir} onclick={selectTargetDir}>选择目标文件夹</OperationButton>}>
         <div className='xl-file-view-path'>目标文件夹：{targetDir}</div>
     </RecursiveFileOperation>

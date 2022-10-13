@@ -264,7 +264,7 @@ const oprations = {
             return filePaths[0]
         }
     },
-// 选择文件夹
+    // 选择文件夹
     selectFilePath: async function (e, filePath) {
         const {canceled, filePaths} = await dialog.showOpenDialog({
             title: '请选择文件夹',
@@ -278,7 +278,7 @@ const oprations = {
             return filePaths[0]
         }
     },
-// 打开新窗口
+    // 打开新窗口
     openWindow: function (e, name) {
         const win = new BrowserWindow({
             width: 900,
@@ -399,8 +399,4 @@ module.exports = () => {
     Object.keys(oprations).forEach(key => {
         ipcMain.handle(key, oprations[key])
     })
-    // ipcMain.handle('dialog:selectFile', selectFile)
-    // ipcMain.handle('dialog:selectFilePath', selectFilePath)
-    // ipcMain.handle('openWindow', openWindow)
-    // getFiles
 }

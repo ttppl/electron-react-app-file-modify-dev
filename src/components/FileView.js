@@ -81,6 +81,7 @@ function FileViewFun(props, ref) {
     return <div style={props.hidden ? {display: 'none'} : {}}>
         <div className='xl-file-view-nav'>
             <div className='xl-file-view-path'>{filePath}</div>
+            <div>{files.filter(n=>n.done).length}/{files.length}</div>
             {!props.fullControl && <div className='xl-file-view-nav-operation'>
                 <label className='xl-file-recursive'>
                     <input type='checkbox' onChange={toogleRecursive} checked={recursive}/>递归</label>
@@ -105,6 +106,7 @@ function FileViewFun(props, ref) {
             </div>}
             {
                 files.map(file => {
+                    if(props.hideCompleteFile&&file.done) return
                     if (file.dir) {
                         return <div key={`file-${file.path}`} className='xl-file' onClick={() => goIntoDir(file.path)}>
                             <img className="xl-file-preview" src={process.env.PUBLIC_URL + '/imgs/filefolder.jpg'}/>

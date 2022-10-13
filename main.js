@@ -1,8 +1,8 @@
-const {app, BrowserWindow, Notification, nativeImage, Menu} = require('electron')
+const {app, BrowserWindow, nativeImage, Menu} = require('electron')
 const path = require('path')
 const mainProcessExplose = require('./MainProcessExplose')
-const url = require("url");
 
+// 菜单配置
 Menu.setApplicationMenu(Menu.buildFromTemplate([
     {
         label: '后退',
@@ -23,6 +23,7 @@ Menu.setApplicationMenu(Menu.buildFromTemplate([
 ]))
 
 const createWindow = () => {
+    // 窗口配置
     const win = new BrowserWindow({
         // width: 800,
         // height: 600,
@@ -32,12 +33,13 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, 'payload.js'),
             // nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
-            contextIsolation : true, //允许渲染进程使用Nodejs
+            contextIsolation: true, //允许渲染进程使用Nodejs
             // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
             webSecurity: false, // 禁用同源策略
             // nodeIntegrationInSubFrames: true // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
         }
     })
+    // 最大化窗口
     win.maximize()
     // win.loadFile('main.html')
 
@@ -54,21 +56,18 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+    // 暴露方法
     mainProcessExplose()
+    // 创建窗口
     const mainWindow = createWindow()
-    // showNotification()
+    // 打开开发者工具
     mainWindow.webContents.openDevTools()
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 })
 
-
+// 关闭窗口退出应用
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
 })
-
-// 通知
-function showNotification(msg, title) {
-    new Notification({title, body: msg}).show()
-}
