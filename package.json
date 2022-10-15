@@ -22,7 +22,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "startElectron": "chcp 65001 && electron .",
-    "dev": "concurrently \"npm run start\" \"npm run startElectron\""
+    "dev": "concurrently \"npm run start-react\" \"npm run startElectron\""
   },
   "eslintConfig": {
     "extends": [

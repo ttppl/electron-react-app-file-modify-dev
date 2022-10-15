@@ -385,9 +385,20 @@ const oprations = {
             fs.rename(filePath, newPath, function (error) {
                 if (error) {
                     console.error('移动错误：', filePath, newPath, error)
-                    reject(error)
+                    var readStream=fs.createReadStream(filePath);
+                    var writeStream=fs.createWriteStream(newPath);
+                    readStream.pipe(writeStream);
+                    readStream.on('end',function(){
+                        fs.unlinkSync(filePath);
+                        resolve()
+                    });
+                    readStream.on('error',function(){
+                        reject(error)
+                    });
+                }else {
+                    resolve()
                 }
-                resolve()
+
 
             })
         })
