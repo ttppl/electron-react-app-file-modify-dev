@@ -1,5 +1,6 @@
 const {app, BrowserWindow, nativeImage, Menu} = require('electron')
 const path = require('path')
+const url = require("url");
 const mainProcessExplose = require('./MainProcessExplose')
 
 // 菜单配置
@@ -43,15 +44,16 @@ const createWindow = () => {
     win.maximize()
     // win.loadFile('main.html')
 
-    // 加载应用 --打包react应用后，__dirname为当前文件路径
-    // win.loadURL(url.format({
-    //     pathname: path.join(__dirname, './build/index.html'),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
+    if(process.env.NODE_ENV==='development'){
+        win.loadURL('http://localhost:3000/');
+    }else {
+        win.loadURL(url.format({
+                pathname: path.join(__dirname, './build/index.html'),
+                protocol: 'file:',
+                slashes: true
+            }));
+    }
 
-    // 加载应用 --开发阶段  需要运行 npm run start
-    win.loadURL('http://localhost:3000/');
     return win
 }
 
@@ -61,7 +63,9 @@ app.whenReady().then(() => {
     // 创建窗口
     const mainWindow = createWindow()
     // 打开开发者工具
-    mainWindow.webContents.openDevTools()
+    if(process.env.NODE_ENV==='development') {
+        mainWindow.webContents.openDevTools()
+    }
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })

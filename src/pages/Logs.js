@@ -14,16 +14,32 @@ function Logs(){
     },[])
 
     const getPage = (page)=>{
+        if(page<1) return
         electronApi().getLog(page).then(res=>{
             setLogLines(res.lines)
             setCurrentPage(page)
         })
     }
+    const clearLog = ()=>{
+        electronApi().clearLog().then(()=>{
+            electronApi().getLog().then(res=>{
+                setLogLines(res.lines)
+                setPages(res.pages)
+                setCurrentPage(res.pages)
+            })
+        })
+
+    }
     return <div className='xl-logs'>
-        <p className='xl-logs-nav'><button onClick={()=>getPage(currentPage-1)}>上一页</button>
-            <span className='xl-logs-page'>{currentPage}/{pages}</span>
-            <button onClick={()=>getPage(currentPage+1)}>下一页</button>
-        </p>
+        <div className='xl-logs-nav'>
+            <p>
+                <button onClick={()=>getPage(currentPage-1)}>上一页</button>
+                <span className='xl-logs-page'>{currentPage}/{pages}</span>
+                <button onClick={()=>getPage(currentPage+1)}>下一页</button>
+            </p>
+            <button onClick={clearLog}>清空日志</button>
+        </div>
+
         {
         logLines.map((line,index)=>{
             return <div className='xl-log-line' key={index}>{line||'\n'}</div>

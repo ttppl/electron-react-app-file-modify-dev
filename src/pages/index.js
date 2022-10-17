@@ -1,21 +1,23 @@
 import '../styles/index.css';
 import OperationButton from "../components/OperationButton";
-
+import {routers} from "../index";
+import {useMemo} from "react";
 function App() {
-    return <>
-        <div className='xl-operation-bar'>
-            <OperationButton to='/renameUnZippableFile'>递归重命名压缩文件</OperationButton>
-            <OperationButton to='/unzipFiles'>递归解压缩文件</OperationButton>
-            <OperationButton to='/renameToTopName'>递归重命名为上层文件名</OperationButton>
-            <OperationButton to='/moveToDir'>递归移动文件到指定文件夹</OperationButton>
-            <OperationButton to='/CompositeOperation'>组合拳</OperationButton>
-        </div>
-        <div className='xl-operation-bar'>
-            <OperationButton to='/rename'>重命名</OperationButton>
-            <OperationButton to='/setting'>设置</OperationButton>
-            <OperationButton to='/logs'>日志</OperationButton>
-        </div>
-    </>
+    const indexRouters = useMemo(()=>{
+        const getRouters = (rs)=>{
+            return rs.map((router,index)=>{
+                if(Array.isArray(router)){
+                    return <div className='xl-operation-bar' key={index}>
+                        {getRouters(router)}
+                    </div>
+                }else {
+                    return <OperationButton key={router.path} to={router.path}>{router.label}</OperationButton>
+                }
+            })
+        }
+        return getRouters(routers[0].children)
+    },[])
+    return indexRouters
 }
 
 export default App;

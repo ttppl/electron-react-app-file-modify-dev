@@ -2,7 +2,7 @@
 	"defaultPath": {
 		"name": "默认文件夹",
 		"type": "dir",
-		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target"
+		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\ziptest"
 	},
 	"defaultMoveTargetPath": {
 		"name": "默认移动集中文件夹",
@@ -62,6 +62,10 @@
 	},
 	"password": {
 		"name": "默认解压缩密码",
+		"value": "111111"
+	},
+	"zipPassword": {
+		"name": "默认压缩密码",
 		"value": "111111"
 	},
 	"replaceSpecialFileWord": {

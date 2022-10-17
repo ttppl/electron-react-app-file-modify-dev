@@ -37,6 +37,7 @@ function Rename() {
             setStep(1)
         }
     }
+    //获取设置
     useEffect(() => {
         window.electronAPI.getConfigs(['defaultPath', 'replaceSpecialFileWord']).then(para => {
             fileRef.current.setFilePath(para.defaultPath)

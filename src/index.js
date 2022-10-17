@@ -13,12 +13,13 @@ import MoveToDir from "./pages/MoveToDir";
 import CompositeOperation from "./pages/CompositeOperation";
 import Setting from "./pages/Setting";
 import Logs from "./pages/Logs";
+import ZipFile from "./pages/ZipFile";
 
 export const routers = [{
     label:'主页',
     path:'/',
     element:<App/>,
-    children:[{
+    children:[[{
         label:'主页',
         path:'/',
         element:<Index/>,
@@ -42,10 +43,14 @@ export const routers = [{
         label:'组合拳',
         path:'/CompositeOperation',
         element:<CompositeOperation/>,
-    },{
+    }],[{
         label:'重命名',
         path:'/rename',
         element:<Rename/>,
+    },{
+        label:'压缩文件',
+        path:'/zipFile',
+        element:<ZipFile/>,
     },{
         label:'设置',
         path:'/setting',
@@ -54,7 +59,7 @@ export const routers = [{
         label:'日志',
         path:'/logs',
         element:<Logs/>,
-    }]
+    }]]
 }]
 
 const getRouter = (rs)=>{
@@ -72,6 +77,9 @@ const getRouter = (rs)=>{
                 />
             </Route>
         }else {
+            if(Array.isArray(r)){
+                return getRouter(r)
+            }
             return <Route key={`route-${r.path}`} path={r.path} element={r.element}/>
         }
     })
