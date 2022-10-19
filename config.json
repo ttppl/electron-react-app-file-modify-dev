@@ -2,17 +2,17 @@
 	"defaultPath": {
 		"name": "默认文件夹",
 		"type": "dir",
-		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target"
+		"value": "D:\\压缩文件"
 	},
 	"defaultMoveTargetPath": {
 		"name": "默认移动集中文件夹",
 		"type": "dir",
-		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target2"
+		"value": "E:\\最新视频"
 	},
 	"winRarPath": {
 		"name": "winrar目录",
 		"type": "dir",
-		"value": "C:\\Program Files\\WinRAR\\"
+		"value": "D:\\software\\WinRAR"
 	},
 	"unzipableFile": {
 		"name": "可解压的文件",
@@ -28,15 +28,15 @@
 		"value": [
 			{
 				"suffix": "",
-				"to": ".rar"
+				"to": ".7z"
 			},
 			{
-				"suffix": ".rar删除",
-				"to": ".rar"
+				"suffix": ".删除我7z",
+				"to": ".7z"
 			},
 			{
-				"suffix": ".rar删除我",
-				"to": ".rar"
+				"suffix": ".7z删除我",
+				"to": ".7z"
 			}
 		]
 	},
@@ -62,7 +62,7 @@
 	},
 	"password": {
 		"name": "默认解压缩密码",
-		"value": "111111"
+		"value": "xb20"
 	},
 	"replaceSpecialFileWord": {
 		"name": "文件名特殊文本替换",
@@ -73,7 +73,7 @@
 	},
 	"maxShowFile": {
 		"name": "最大显示文件数",
-		"value": 1000
+		"value": 100000
 	},
 	"logPageSize": {
 		"name": "日志显示每页行数",
