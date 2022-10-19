@@ -5,6 +5,12 @@ import {routers} from './index'
 
 function getRouterLabel(path, rs = routers) {
     for (let router of rs) {
+        if(Array.isArray(router)){
+            const chiLabel = getRouterLabel(path, router)
+            if (chiLabel) {
+                return chiLabel
+            }
+        }
         if (router.path === path) {
             return router.label
         }

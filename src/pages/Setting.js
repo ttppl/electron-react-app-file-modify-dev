@@ -129,8 +129,9 @@ function Setting() {
     const [type,setType] = useState('json')
     const setConfigFile = (e) => {
         try {
-            setConfig(JSON.parse(e.target.value))
+            JSON.parse(e.target.value)
             e.target.style.borderColor = 'gray'
+            setConfig(e.target.value)
         } catch {
             e.target.style.borderColor = 'red'
             setConfig(e.target.value)

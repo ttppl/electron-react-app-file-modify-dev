@@ -1,6 +1,9 @@
 .xl-logs{
   padding: 40px;
   .xl-logs-nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     .xl-logs-page{
       margin: 0 20px;
       font-size: 18px;

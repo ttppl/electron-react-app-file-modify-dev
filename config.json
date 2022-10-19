@@ -64,6 +64,10 @@
 		"name": "默认解压缩密码",
 		"value": "xb20"
 	},
+	"zipPassword": {
+		"name": "默认压缩密码",
+		"value": "111111"
+	},
 	"replaceSpecialFileWord": {
 		"name": "文件名特殊文本替换",
 		"value": [

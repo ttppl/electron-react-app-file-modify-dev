@@ -71,7 +71,7 @@ function FileViewFun(props, ref) {
         setFilePath(path)
         getFiles(path, recursive)
     }
-
+    // 处理不能预览的文件
     const imgError = (e) => {
         e.target.src = process.env.PUBLIC_URL + '/imgs/file.jpg'
     }
