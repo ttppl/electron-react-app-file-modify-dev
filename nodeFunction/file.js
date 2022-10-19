@@ -215,14 +215,12 @@ module.exports.renameFile = (filePath, newName, keepOrigName) => {
     })
 }
 // 解压文件
-module.exports.unzipFile = (filePath, targetPath) => {
-    const winRarPath = getConfig('winRarPath')
-    const unzipAutoRename = getConfig('unzipAutoRename')
-    const password = getConfig('password')
-    const deleteFileAfterUnzip = getConfig('deleteFileAfterUnzip')
+module.exports.unzipFile = ({filePath, targetPath,password, deleteFileAfterUnzip}) => {
+    const winRarPath = getConfig('winRarPath')||path.join(__dirname,'../static')
+    this.createDir(targetPath)//创建目录
     var exec = require('child_process').exec
     writeLog('解压文件：', `源文件：${filePath}`, `解压目录：${targetPath}`, '\n')
-    var exec_path = `winrar x ${unzipAutoRename ? ' -or' : ''} ${password ? ` -p${password}` : ''} "${filePath}" "${targetPath}"`
+    var exec_path = `winrar x -or ${password ? ` -p${password}` : ''} "${filePath}" "${targetPath}"`
     return new Promise((resolve, reject) => {
         exec(exec_path, {cwd: path.resolve(winRarPath)}, async function (error, stdout, stderr) {
             if (error) {
@@ -230,7 +228,7 @@ module.exports.unzipFile = (filePath, targetPath) => {
                 reject(error)
             } else {
                 if (deleteFileAfterUnzip) {
-                    await this.deleteFile(filePath)
+                    await module.exports.deleteFile(filePath)
                 }
                 resolve()
             }
@@ -240,8 +238,14 @@ module.exports.unzipFile = (filePath, targetPath) => {
 // 压缩文件
 module.exports.zipFile = ({filePath, targetPath, password, deleteFileAfterzip}) => {
     targetPath = targetPath||this.getFileDir(filePath)
-    const targetFilePath = path.join(targetPath,`${this.getFileName(filePath)}.rar`)
-    const winRarPath = getConfig('winRarPath')
+    let targetFilePath = path.join(targetPath,`${this.getFileName(filePath)}.rar`)
+    let index = 1
+    this.createDir(targetPath)//创建目录
+    while(fs.existsSync(targetFilePath)){
+        targetFilePath = path.join(targetPath,`${this.getFileName(filePath)}[${index}].rar`)
+        index++
+    }
+    const winRarPath = getConfig('winRarPath')||path.join(__dirname,'../static')
     var exec = require('child_process').exec
     var exec_path = `winrar a -ep -or ${password ? ` -hp${password}` : ''} "${targetFilePath}" "${filePath}"`
     writeLog('压缩文件：', `源文件：${filePath}`, `压缩到：${targetPath}`,`执行命令：${exec_path}`, '\n',)
@@ -252,7 +256,7 @@ module.exports.zipFile = ({filePath, targetPath, password, deleteFileAfterzip}) 
                 reject(error)
             } else {
                 if (deleteFileAfterzip) {
-                    await this.deleteFile(filePath)
+                    await module.exports.deleteFile(filePath)
                 }
                 resolve()
             }

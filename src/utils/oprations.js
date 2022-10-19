@@ -17,14 +17,16 @@ export const renameUnzippableFileOperation = async ({files, setFiles,unzippableF
 }
 
 export const unzipFileOperation = async ({files, setFiles,unzipableFile,multipleThreadUnzip}) => {
+    const deleteFileAfterUnzip = await window.electronAPI.getConfig('deleteFileAfterUnzip')
+    const password = await window.electronAPI.getConfig('unzipPassword')
     for (let file of files) {
         if(unzipableFile.includes(file.suffix)) {
             file.loading = true
             setFiles([...files])
             if(!multipleThreadUnzip) {
-                await window.electronAPI.unzipFile(file.path, file.parent)
+                await window.electronAPI.unzipFile({filePath:file.path, targetPath:file.parent,password, deleteFileAfterUnzip})
             }else{
-                window.electronAPI.unzipFile(file.path, file.parent)
+                window.electronAPI.unzipFile({filePath:file.path, targetPath:file.parent,password, deleteFileAfterUnzip})
             }
             file.done = true
             setFiles([...files])

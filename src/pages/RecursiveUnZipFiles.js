@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import RecursiveFileOperation from "../components/RecursiveFileOperation";
 import {unzipFileOperation} from "../utils/oprations";
 
-function UnzipFiles() {
+function RecursiveUnZipFiles() {
     const multipleThreadUnzip = useRef(false)
     const filters = useRef([])
     const filter = (file) => {
@@ -25,4 +25,4 @@ function UnzipFiles() {
     return <RecursiveFileOperation ref={ref} filter={filter} confirm={confirm}/>
 }
 
-export default UnzipFiles
+export default RecursiveUnZipFiles

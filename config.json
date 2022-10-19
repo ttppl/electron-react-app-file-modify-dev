@@ -12,7 +12,7 @@
 	"winRarPath": {
 		"name": "winrar目录",
 		"type": "dir",
-		"value": "D:\\software\\WinRAR"
+		"value": ""
 	},
 	"unzipableFile": {
 		"name": "可解压的文件",
@@ -52,21 +52,17 @@
 		"name": "记录日志",
 		"value": true
 	},
-	"unzipAutoRename": {
-		"name": "解压缩是否自动重命名文件",
-		"value": true
-	},
 	"deleteFileAfterUnzip": {
-		"name": "解压缩后删除压缩文件",
+		"name": "解压缩后删除压缩文件（组合拳）",
 		"value": true
 	},
-	"password": {
+	"unzipPassword": {
 		"name": "默认解压缩密码",
 		"value": "xb20"
 	},
 	"zipPassword": {
 		"name": "默认压缩密码",
-		"value": "111111"
+		"value": "liu.946534ll"
 	},
 	"replaceSpecialFileWord": {
 		"name": "文件名特殊文本替换",

@@ -1,7 +1,7 @@
 import OperationButton from "../components/OperationButton";
 import {useEffect, useRef, useState} from "react";
 import FileView from "../components/FileView";
-import '../styles/rename.scss'
+import '../styles/fileOpereationPage.scss'
 import {electronApi, showError, showMessage} from "../utils/main";
 import Icon from "../components/Icon";
 
@@ -187,14 +187,14 @@ function Rename() {
         }
         fileRef.current.updateFiles()
     }
-    return <div className='xl-rename-page'>
+    return <div className='xl-main-page'>
         <div className='xl-operation-bar'>
             <OperationButton focusing={step === 1} onclick={selectFilePath}>选择文件夹</OperationButton>
             <OperationButton focusing={step === 2} onclick={() => setStep(2)}>重命名</OperationButton>
             <OperationButton focusing={step === 3} onclick={() => setStep(3)}>特殊操作</OperationButton>
             <OperationButton focusing={step === 0} onclick={() => setStep(0)}>操作记录</OperationButton>
         </div>
-        <div className='xl-rename-viewer'>
+        <div className='xl-main-content'>
             <FileView hidden={step !== 1} ref={fileRef}/>
             <form style={step !== 2 ? {display: 'none'} : {}} className='xl-form' onSubmit={e => e.preventDefault()}>
                 <p>
@@ -223,7 +223,7 @@ function Rename() {
                     <label><span>特殊字符</span>
                         <div>
                             {replaceSpecialWords.map((v, index) => {
-                                return <div className='special-word-input' key={'special-word' + index}>
+                                return <div className='xl-inline-input' key={'special-word' + index}>
                                     <input value={v} onChange={e => {
                                         const tmp = [...replaceSpecialWords]
                                         tmp[index] = e.target.value

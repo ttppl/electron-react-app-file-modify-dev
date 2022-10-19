@@ -7,7 +7,7 @@ import {HashRouter, Route, Routes} from "react-router-dom";
 import Rename from "./pages/Rename";
 import Index from "./pages/index"
 import RenameUnZippableFile from "./pages/RenameUnZippableFile";
-import UnzipFiles from "./pages/UnzipFiles";
+import RecursiveUnZipFiles from "./pages/RecursiveUnZipFiles";
 import RenameToTopName from "./pages/RenameToTopName";
 import MoveToDir from "./pages/MoveToDir";
 import CompositeOperation from "./pages/CompositeOperation";
@@ -30,7 +30,7 @@ export const routers = [{
     },{
         label:'递归解压缩文件',
         path:'/unzipFiles',
-        element:<UnzipFiles/>,
+        element:<RecursiveUnZipFiles/>,
     },{
         label:'递归重命名为上层文件名',
         path:'/renameToTopName',

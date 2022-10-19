@@ -1,10 +1,14 @@
-.xl-rename-page{
+.xl-main-page{
   padding: 10px;
   .xl-operation-bar{
-    //width: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    top: 40px;
+    background-color: white;
   }
-  .xl-rename-viewer{
-    margin-top: 20px;
+  .xl-main-content{
+    margin-top: 120px;
     .xl-form{
       margin-left: 180px;
       .submit-button{
@@ -15,7 +19,7 @@
           margin: 30px 10px;
         }
       }
-      .special-word-input{
+      .xl-inline-input{
         display: inline-flex;
         align-items: center;
         //margin-bottom: 10px;
