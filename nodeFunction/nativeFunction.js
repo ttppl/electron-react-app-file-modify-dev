@@ -44,6 +44,21 @@ module.exports.showMessage = (options) => {
         return dialog.showMessageBox(options)
     }
 }
+//显示确认框
+module.exports.showConfirm = (msg) => {
+    if (msg) {
+        return new Promise((resolve,reject)=>{
+            dialog.showMessageBox({message:msg,type:'question',buttons: ["确认", "我再想想"],cancelId:3}).then(res=>{
+                if(res.response===0){
+                    resolve(true)
+                }else {
+                    resolve(false)
+                }
+            })
+        })
+    }
+}
+
 //打开开发者工具
 module.exports.openDevTool = function (){
     BrowserWindow.getAllWindows()[0].webContents.toggleDevTools()

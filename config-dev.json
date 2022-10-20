@@ -1,0 +1,82 @@
+{
+	"defaultPath": {
+		"name": "默认文件夹",
+		"type": "dir",
+		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target"
+	},
+	"defaultMoveTargetPath": {
+		"name": "默认移动集中文件夹",
+		"type": "dir",
+		"value": "C:\\Users\\liuzhixin\\Desktop\\测试文件\\target2"
+	},
+	"winRarPath": {
+		"name": "winrar目录",
+		"type": "dir",
+		"value": ""
+	},
+	"unzipableFile": {
+		"name": "可解压的文件",
+		"type": "obj",
+		"value": [
+			".rar",
+			".7z"
+		]
+	},
+	"zipFile": {
+		"name": "可改为压缩文件的文件",
+		"type": "obj",
+		"value": [
+			{
+				"suffix": "",
+				"to": ".7z"
+			},
+			{
+				"suffix": ".删除我7z",
+				"to": ".7z"
+			},
+			{
+				"suffix": ".7z删除我",
+				"to": ".7z"
+			}
+		]
+	},
+	"multipleThreadUnzip": {
+		"name": "多线程解压（不等待）",
+		"value": false
+	},
+	"keepOrigName": {
+		"name": "重命名保留原文件名",
+		"value": true
+	},
+	"writeLog": {
+		"name": "记录日志",
+		"value": true
+	},
+	"deleteFileAfterUnzip": {
+		"name": "解压缩后删除压缩文件（组合拳）",
+		"value": true
+	},
+	"unzipPassword": {
+		"name": "默认解压缩密码",
+		"value": "xb20"
+	},
+	"zipPassword": {
+		"name": "默认压缩密码",
+		"value": "xl.1069B"
+	},
+	"replaceSpecialFileWord": {
+		"name": "文件名特殊文本替换",
+		"value": [
+			"[www.baidu.com]",
+			"123"
+		]
+	},
+	"maxShowFile": {
+		"name": "最大显示文件数",
+		"value": 100000
+	},
+	"logPageSize": {
+		"name": "日志显示每页行数",
+		"value": 30
+	}
+}

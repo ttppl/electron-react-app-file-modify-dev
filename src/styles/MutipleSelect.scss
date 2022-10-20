@@ -1,0 +1,42 @@
+.xl-multiple-select{
+  border: 1px solid gray;
+  border-radius: 4px;
+  width: 100px;
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  label{
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 100%;
+    align-items: center;
+    .clear{
+      position: absolute;
+      cursor: pointer;
+      right: 0px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      z-index: 10;
+    }
+  }
+  .xl-select-options{
+    z-index: 10;
+    padding: 10px 0;
+    border: 1px solid;
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    border-radius: 4px;
+    .xl-select-option{
+      list-style: none;
+      padding: 5px 0 5px 5px;
+      &[data-selected="true"]{
+        background-color: #e0dbdb;
+      }
+    }
+  }
+}

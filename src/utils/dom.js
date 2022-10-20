@@ -17,3 +17,14 @@ export const getClass=(className)=>{
     }
     return classNames.join(' ')
 }
+
+export const scrollToBottom=(dom) =>{
+    //采用settimeout避免快速滚动获取的scrollHeight没变
+    setTimeout(()=>{
+        if(dom){
+            return dom.scrollTop = dom.scrollHeight
+        }
+        document.documentElement.scrollTop = document.body.scrollHeight
+    },0)
+
+}

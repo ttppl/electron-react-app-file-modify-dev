@@ -66,12 +66,12 @@ function Rename() {
             for (let file of files) {
                 showMsg(`源文件：${file.path}`)
                 const newName = replaceName(file.name) + file.suffix
-                if(newName!==file.fullName) {
+                if (newName !== file.fullName) {
                     if (exec) {
                         await electronApi().renameFile(file.path, newName)
                     }
                     showMsg(`替换后文件名：${newName}`)
-                }else {
+                } else {
                     showMsg(`替换后文件名一致`)
                 }
                 showMsg('\n\n')
@@ -109,12 +109,12 @@ function Rename() {
                 showMsg(`源文件：${file.path}`)
                 if (replace) {
                     const newName = file.name.replace(reg, regReplaceText) + file.suffix
-                    if(newName!==file.fullName) {
+                    if (newName !== file.fullName) {
                         if (exec) {
                             await electronApi().renameFile(file.path, newName)
                         }
                         showMsg(`替换后文件名：${newName}`)
-                    }else showMsg(`替换后文件名一致`)
+                    } else showMsg(`替换后文件名一致`)
                 } else {
                     showMsg(`匹配结果：${reg.exec(file.name)?.map((n, index) => {
                         if (index == 0) {
@@ -153,6 +153,10 @@ function Rename() {
             showError('该文件夹无文件！')
             return
         }
+        if (operationType === 'fullName'&&exec){
+            const confirmed = window.confirm('重命名全名可能会会导致扩展名丢失，请确认！')
+            if(!confirmed) return
+        }
         setStep(0)
         outputRef.current.innerHTML = ''
         for (let i = 0; i < files.length; i++) {
@@ -162,28 +166,55 @@ function Rename() {
                 const reg = /(.*)\.(.*)/g
                 const match = reg.exec(name);
                 const newName = match?.[1] || name
-                const suffix = match?.[2] ?`.${match[2]}`:''
-                if(exec) {
+                const suffix = match?.[2] ? `.${match[2]}` : ''
+                if (exec) {
                     const res = await electronApi().renameFile(file.path, `${newName}${i !== 0 ? `[${(i + 1)}]` : ''}${suffix}`, keepOrigName === '1')
                     showMsg('结果：' + res)
-                }else {
+                } else {
                     showMsg(`新文件名：${newName}${i !== 0 ? `[${(i + 1)}]` : ''}${suffix}`)
                 }
 
             }
             if (operationType === 'name') {
-                if(exec) {
+                if (exec) {
                     const res = await electronApi().renameFile(file.path, `${name}${i !== 0 ? `[${(i + 1)}]` : ''}${file.suffix}`, keepOrigName === '1')
                     showMsg('结果：' + res)
-                }else showMsg(`新文件名：${name}${i !== 0 ? `[${(i + 1)}]` : ''}${file.suffix}`)
+                } else showMsg(`新文件名：${name}${i !== 0 ? `[${(i + 1)}]` : ''}${file.suffix}`)
             }
             if (operationType === 'suffix') {
-                if(exec) {
+                if (exec) {
                     const res = await electronApi().renameFile(file.path, `${file.name}.${name}`, keepOrigName === '1')
                     showMsg('结果：' + res)
-                }else showMsg(`新文件名：${file.name}.${name}`)
+                } else showMsg(`新文件名：${file.name}.${name}`)
             }
 
+        }
+        fileRef.current.updateFiles()
+    }
+    //测试添加路径到文件名
+    const testRenameWithPath = async (exec = false) => {
+        const files = fileRef.current.getFiles().filter(file => !file.dir)
+        const filePath = fileRef.current.getFilePath()
+        const parentDirName = await electronApi().getFileName(filePath)
+        if (!files || files.length < 1) {
+            setStep(1)
+            showError('该文件夹无文件！')
+            return
+        }
+        setStep(0)
+        outputRef.current.innerHTML = ''
+        for (let file of files) {
+            console.log(file)
+            const dirName = file.parent === filePath ? parentDirName : file.parent.replace(filePath, '').replaceAll('\\', '_').slice(1)
+            const newName = `${dirName}_${file.fullName}`
+            showMsg('源文件：' + file.path)
+            if (exec) {
+                const res = await electronApi().renameFile(file.path, newName)
+                showMsg('结果：' + res)
+            } else {
+                showMsg(`新文件：${file.parent}\\${newName}`)
+            }
+            showMsg('\n')
         }
         fileRef.current.updateFiles()
     }
@@ -205,20 +236,20 @@ function Rename() {
                     <label><input name="operationType" type="radio" onChange={selectOperationType}
                                   checked={operationType === 'suffix'} value="suffix"/>后缀</label>
                 </p>
-                <p><label><input name="keepOrigName" type="checkbox" value='1'
+                <p><label><input type="checkbox" value='1'
                                  onChange={selectKeepOrigName} checked={keepOrigName === '1'}/>
                     保留原文件名
                 </label></p>
-                <p><label><span>文件名</span><input name="name" value={name} onChange={e => setName(e.target.value)}
+                <p><label><span>文件名</span><input value={name} onChange={e => setName(e.target.value)}
                                                  type="input"/></label></p>
                 <p className='submit-button'>
-                    <button type='button' onClick={()=>rename()}>测试</button>
-                    <button type='button' onClick={()=>rename(true)}>提交</button>
+                    <button type='button' onClick={() => rename()}>测试</button>
+                    <button type='button' onClick={() => rename(true)}>提交</button>
                 </p>
 
             </form>
             <form style={step !== 3 ? {display: 'none'} : {}} className='xl-form' onSubmit={e => e.preventDefault()}>
-                <h3>特殊文本去除</h3>
+                <h3>1、特殊文本去除</h3>
                 <div>
                     <label><span>特殊字符</span>
                         <div>
@@ -249,23 +280,29 @@ function Rename() {
 
                 </div>
                 <p className='submit-button'>
-                    <button type='button' onClick={()=>testReplace()}>测试</button>
+                    <button type='button' onClick={() => testReplace()}>测试</button>
                     <button type='button' onClick={() => testReplace(true)}>提交</button>
                 </p>
 
-                <h3>正则替换</h3>
+                <h3>2、正则替换</h3>
                 <p><label><span>正则表达</span>/<input name="name" value={replaceReg}
                                                    onChange={e => setReplaceReg(e.target.value)}
                                                    type="input"/>/g</label>
                     <button onClick={() => testReg()}>测试</button>
                 </p>
                 <p><label><span>替换文本</span>&nbsp;<input name="name" value={regReplaceText}
-                                                   onChange={e => setRegReplaceText(e.target.value)}
-                                                   type="input"/></label>
+                                                        onChange={e => setRegReplaceText(e.target.value)}
+                                                        type="input"/></label>
                     <button onClick={() => testReg(true)}>测试</button>
                 </p>
                 <p className='submit-button'>
                     <button type='button' onClick={() => testReg(true, true)}>提交</button>
+                </p>
+
+                <h3>2、添加路径到文件名</h3>
+                <p className='submit-button'>
+                    <button type='button' onClick={() => testRenameWithPath()}>测试</button>
+                    <button type='button' onClick={() => testRenameWithPath(true)}>提交</button>
                 </p>
 
             </form>

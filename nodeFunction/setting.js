@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const configFilePath = path.join(__dirname,'../config.json')
+const configFilePath = process.env.NODE_ENV==='development'?path.join(__dirname,'../config-dev.json'):path.join(__dirname,'../config.json')
 
 //获取设置(单个)
 module.exports.getConfig = function  (key) {

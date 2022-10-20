@@ -5,14 +5,15 @@ Icon.defaultProps = {
     name:'loading',
     size:20,
     rotate:false,
-    onClick:null
+    onClick:null,
+    style:{}
 }
 
-function Icon(props){
-    return <img className={getClass([props.className,{'xl-icon-rotate':props.rotate}])}
-                style={{width:props.size,height:props.size}}
-                src={process.env.PUBLIC_URL +`/icons/${props.name}.svg`}
-        onClick={props.onClick}
+function Icon({className,name,size,rotate,onClick,style}){
+    return <img className={getClass([className,{'xl-icon-rotate':rotate}])}
+                style={{width:size,height:size,...style}}
+                src={process.env.PUBLIC_URL +`/icons/${name}.svg`}
+        onClick={onClick}
     />
 }
 

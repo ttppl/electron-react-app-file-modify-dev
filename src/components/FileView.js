@@ -2,6 +2,18 @@ import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import '../styles/fileView.scss'
 import {getClass} from "../utils/dom";
 import Icon from "./Icon";
+import MultipleSelect from "./MultipleSelect";
+
+//文件对象
+// {
+//     "topName": "主名称",
+//     "dir": false,
+//     "name": "test",
+//     "fullName": "test.rar",
+//     "suffix": ".rar",
+//     "parent": "C:\\主名称4\\txt",
+//     "path": "C:\\主名称4\\txt\\test.rar"
+// }
 
 const FileView = forwardRef(FileViewFun)
 
@@ -22,6 +34,8 @@ function FileViewFun(props, ref) {
     const [parentDir, setParentDir] = useState('')
     const [recursive, setRecursive] = useState(props.recursive)
     const [showPath,setShowPath] = useState(props.showPath)
+    const [fileSuffix,setFileSuffix] = useState([])
+    const [suffixFilter,setSuffixFilter] = useState([])
     const toogleRecursive = () => {
         getFiles(filePath, !recursive)
         setRecursive(!recursive)
@@ -33,12 +47,19 @@ function FileViewFun(props, ref) {
     }, [])
     const getFiles = async (path, all) => {
         if (path) {
-            const files = await window.electronAPI.getFiles(path, all)
+            const files = Array.isArray(path)?path:await window.electronAPI.getFiles(path, all)
             files.sort((a,b)=>{
                 if((a.dir&&b.dir)||(!a.dir&&!b.dir)){
                     return 0
                 }else return a.dir?-1:1
             })
+            const suffix = new Set()
+            for (let file of files) {
+                if(file.suffix) {
+                    suffix.add(file.suffix.slice(1))
+                }
+            }
+            setFileSuffix(Array.from(suffix))
             setFiles(files)
             const dir = await window.electronAPI.getFileDir(path)
             setParentDir(dir)
@@ -50,7 +71,7 @@ function FileViewFun(props, ref) {
     useImperativeHandle(ref, () => ({
         getFiles: () => files,
         getFilePath: () => filePath,
-        setFiles: (files) => setFiles(files),
+        setFiles: (files) => getFiles(files),
         setFilePath: (filePath, getFile = true) => {
             setFilePath(filePath)
             if (getFile) {
@@ -92,6 +113,10 @@ function FileViewFun(props, ref) {
                         <option value='preview'>预览</option>
                         <option value='list'>列表</option>
                     </select>
+                    <MultipleSelect value={suffixFilter} placeholder='类型筛选'
+                                    options={fileSuffix.map(suffix=>({label:suffix,value:suffix}))}
+                                    onChange={value => setSuffixFilter(value)}/>
+
                 </label>
             </div>}
 
@@ -115,6 +140,7 @@ function FileViewFun(props, ref) {
                             </div>
                         </div>
                     }
+                    if(suffixFilter.length>0&&!suffixFilter.includes(file.suffix.slice(1))) return
                     return <div className={getClass(['xl-file', {'operating': file.loading || file.done}])}
                                 key={`file-${file.path}`}>
                         {!file.done && file.loading && <Icon className='xl-operation-icon' name='loading' rotate/>}

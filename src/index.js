@@ -14,6 +14,7 @@ import CompositeOperation from "./pages/CompositeOperation";
 import Setting from "./pages/Setting";
 import Logs from "./pages/Logs";
 import ZipFile from "./pages/ZipFile";
+import MoveFile from "./pages/moveFile";
 
 export const routers = [{
     label:'主页',
@@ -47,6 +48,10 @@ export const routers = [{
         label:'重命名',
         path:'/rename',
         element:<Rename/>,
+    },{
+        label:'移动',
+        path:'/moveFile',
+        element:<MoveFile/>,
     },{
         label:'压缩文件',
         path:'/zipFile',

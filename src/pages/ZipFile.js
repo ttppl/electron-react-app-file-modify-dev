@@ -4,6 +4,7 @@ import FileView from "../components/FileView";
 import '../styles/fileOpereationPage.scss'
 import {electronApi, showError, showMessage} from "../utils/main";
 import Icon from "../components/Icon";
+import {scrollToBottom} from "../utils/dom";
 
 function ZipFile() {
     const fileRef = useRef()
@@ -63,7 +64,7 @@ function ZipFile() {
             showMsg(`${unzip ? '解压' : '压缩'}文件：${file.path}`)
             const targetPath = targetFilePath ? await electronApi().getFileDir(file.path.replace(sourcePath, targetFilePath)) : file.parent
             showMsg(`目标文件：${targetPath}`)
-            document.documentElement.scrollTop = document.body.scrollHeight
+            scrollToBottom()
             try {
                 if (unzip) {
                     await electronApi().unzipFile({
@@ -84,7 +85,7 @@ function ZipFile() {
             } catch (err) {
                 console.log(err)
             }
-            document.documentElement.scrollTop = document.body.scrollHeight
+            scrollToBottom()
         }
         fileRef.current.updateFiles()
     }
@@ -99,9 +100,9 @@ function ZipFile() {
         <div className='xl-main-content'>
             <FileView hidden={step !== 1} ref={fileRef}/>
             <form style={step !== 2 ? {display: 'none'} : {}} className='xl-form' onSubmit={e => e.preventDefault()}>
-                <p><label><input name="keepOrigName" type="checkbox" value='1'
+                <p><label><input type="checkbox"
                                  onChange={e => setDeleteFileAfterzip(!deleteFileAfterzip)}
-                                 checked={deleteFileAfterzip}/>
+                                 checked={!!deleteFileAfterzip}/>
                     压缩后删除文件
                 </label></p>
                 <p>压缩到指定文件夹（保持目录结构）
@@ -116,9 +117,9 @@ function ZipFile() {
 
             </form>
             <form style={step !== 3 ? {display: 'none'} : {}} className='xl-form' onSubmit={e => e.preventDefault()}>
-                <p><label><input name="keepOrigName" type="checkbox" value='1'
+                <p><label><input type="checkbox"
                                  onChange={e => setDeleteFileAfterUnzip(!deleteFileAfterUnzip)}
-                                 checked={deleteFileAfterUnzip}/>
+                                 checked={!!deleteFileAfterUnzip}/>
                     解压后删除文件
                 </label></p>
                 <p>解压到指定文件夹（保持目录结构）
