@@ -34,7 +34,7 @@
     .xl-select-option{
       list-style: none;
       padding: 5px 0 5px 5px;
-      &[data-selected="true"]{
+      &[data-selected="true"],&:hover{
         background-color: #e0dbdb;
       }
     }

@@ -18,13 +18,13 @@
   },
   "scripts": {
     "start-react": "react-scripts start",
-    "build": "react-scripts build",
+    "build-react": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "startElectron": "set NODE_ENV=development&&chcp 65001 && electron .",
     "dev": "concurrently \"npm run start-react\" \"npm run startElectron\"",
-    "package-app": "electron-packager . electron-react-app --platform=win32 --arch=x64 --download.mirrorOptions.mirror=https://npm.taobao.org/mirrors/electron/  --overwrite --ignore=node_modules --electron-version=11.1.1",
-    "packag-all": "react-scripts build && electron-packager . electron-react-app --platform=win32 --arch=x64 --download.mirrorOptions.mirror=https://npm.taobao.org/mirrors/electron/  --overwrite --ignore=node_modules --electron-version=11.1.1"
+    "package-app": "electron-packager . electron-file-build --out=../ --platform=win32 --arch=x64 --download.mirrorOptions.mirror=https://npm.taobao.org/mirrors/electron/  --overwrite --ignore=node_modules --electron-version=11.1.1",
+    "packag-all": "npm run build-react && npm run package-app"
   },
   "eslintConfig": {
     "extends": [

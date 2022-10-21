@@ -204,7 +204,6 @@ function Rename() {
         setStep(0)
         outputRef.current.innerHTML = ''
         for (let file of files) {
-            console.log(file)
             const dirName = file.parent === filePath ? parentDirName : file.parent.replace(filePath, '').replaceAll('\\', '_').slice(1)
             const newName = `${dirName}_${file.fullName}`
             showMsg('源文件：' + file.path)
