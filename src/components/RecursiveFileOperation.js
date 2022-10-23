@@ -3,6 +3,7 @@ import OperationButton from "../components/OperationButton";
 import FileView from "../components/FileView";
 import {setGlobalLoading} from "./Loading";
 import '../styles/recursiveFileOperation.scss'
+import {electronApi} from "../utils/main";
 
 const RecursiveFileOperation = forwardRef(RecursiveFileOperationFun)
 
@@ -28,7 +29,7 @@ function RecursiveFileOperationFun(props,ref) {
     }),[filePath])
     // 获取文件
     const getFiles = async (path) => {
-        const files = await window.electronAPI.getFiles(path, true)
+        const files = await electronApi().getFiles(path, true)
         if(props.filter) {
             fileRef.current.setFiles(files.filter(props.filter))
         }else {
@@ -38,7 +39,7 @@ function RecursiveFileOperationFun(props,ref) {
     }
 
     const selectFilePath = async () => {
-        const fp = await window.electronAPI.selectFilePath(filePath)
+        const fp = await electronApi().selectFilePath(filePath)
         setFilePath(fp)
         if (fp) {
             fileRef.current.setFilePath(fp)
@@ -53,7 +54,7 @@ function RecursiveFileOperationFun(props,ref) {
             await props.confirm?.({files:fileRef.current.getFiles(), setFiles:fileRef.current.setFiles})
             setGlobalLoading(false)
         }else {
-            window.electronAPI.showError('无匹配文件！')
+            electronApi().showError('无匹配文件！')
         }
     }
     return <div className='xl-recursive-operation-page'>

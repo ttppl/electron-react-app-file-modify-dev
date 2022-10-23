@@ -35,11 +35,11 @@ module.exports.getFileDir = function (filePath) {
     try {
         return path.dirname(filePath)
     } catch (e) {
-        showNotification(`文件父目录获取错误(${e.message})：${filePath}`)
+        showNotification(`文件父目录获取错误(${e.message})：${filePath}\n${e.stack}`)
     }
 }
 //递归获取目录下所有文件
-module.exports.getAllFiles = function (filePath, filter, name) {
+module.exports.getAllFiles = function (filePath, name) {
     try {
         filePath = path.resolve(filePath)
         const files = []
@@ -54,19 +54,17 @@ module.exports.getAllFiles = function (filePath, filter, name) {
                 writeLog(`文件信息获取错误(${filePath})：${e.stack}`)
             }
             if (dir?.isDirectory()) {
-                files.push(...this.getAllFiles(subPath, filter, name || fileName))
+                files.push(...module.exports.getAllFiles(subPath, name || fileName))
             } else {
                 const fileModel = {
-                    topName: name || this.getFileName(filePath),
-                    name: this.getFileName(fileName),
+                    topName: name || module.exports.getFileName(filePath),
+                    name: module.exports.getFileName(fileName),
                     fullName: fileName,
-                    suffix: this.getFileSuffix(subPath),
-                    parent: this.getFileDir(subPath),
+                    suffix: module.exports.getFileSuffix(subPath),
+                    parent: module.exports.getFileDir(subPath),
                     path: subPath
                 }
-                if (!filter || filter(fileModel)) {
-                    files.push(fileModel)
-                }
+                files.push(fileModel)
             }
             if (files.length > max) {
                 showDialogMsgDebounce(`文件过多！大于(${max})`)
@@ -81,7 +79,7 @@ module.exports.getAllFiles = function (filePath, filter, name) {
 
 }
 //获取目录下文件(包含目录)
-module.exports.getDirFiles = function (filePath, filter) {
+module.exports.getDirFiles = function (filePath) {
     const files = []
     const max = getConfig('maxShowFile')
     try {
@@ -100,15 +98,12 @@ module.exports.getDirFiles = function (filePath, filter) {
                 writeLog(`文件信息获取错误(${filePath})：${e.stack}`)
             }
             const fileModel = {
-                name: this.getFileName(fileName),
+                name: module.exports.getFileName(fileName),
                 fullName: fileName,
                 dir: !!dir?.isDirectory(),
-                suffix: this.getFileSuffix(subPath),
-                parent: this.getFileDir(subPath),
+                suffix: module.exports.getFileSuffix(subPath),
+                parent: module.exports.getFileDir(subPath),
                 path: subPath
-            }
-            if (!filter || filter(fileModel)) {
-                files.push(fileModel)
             }
             if (files.length > max) {
                 showDialogMsgDebounce(`文件过多！大于(${max})`)
@@ -143,7 +138,7 @@ module.exports.deleteFile = function (filePath) {
 //创建目录
 module.exports.createDir = function (dir) {
     if (!fs.existsSync(dir)) {
-        this.createDir(this.getFileDir(dir))
+        module.exports.createDir(module.exports.getFileDir(dir))
         fs.mkdirSync(dir)
     }
 }
@@ -176,29 +171,29 @@ module.exports.selectFilePath = async function (filePath) {
     }
 }
 // 获取文件列表
-module.exports.getFiles = (filePath, all, filter) => {
-    return all ? this.getAllFiles(filePath, filter) : this.getDirFiles(filePath, filter)
+module.exports.getFiles = (filePath, all) => {
+    return all ? module.exports.getAllFiles(filePath) : module.exports.getDirFiles(filePath)
 }
 // 重命名文件
 module.exports.renameFile = (filePath, newName, keepOrigName) => {
     return new Promise((resolve, reject) => {
-        const origFileName = this.getFileName(filePath)
-        let newFileName = this.getFileName(newName)
-        if (this.getFileFullName(filePath) === newName) {
+        const origFileName = module.exports.getFileName(filePath)
+        let newFileName = module.exports.getFileName(newName)
+        if (module.exports.getFileFullName(filePath) === newName) {
             resolve('新名称与原名称一致！')
             return
         }
-        const newFileSuffix = this.getFileSuffix(newName)
+        const newFileSuffix = module.exports.getFileSuffix(newName)
         if (newFileName !== origFileName && keepOrigName) {
             newFileName = newFileName + '__' + origFileName
         }
         let newFileFullName = newFileName + newFileSuffix
-        let newPath = path.join(this.getFileDir(filePath), newFileFullName)
+        let newPath = path.join(module.exports.getFileDir(filePath), newFileFullName)
         let exist = fs.existsSync(newPath)
         let i = 1
         while (exist) {
             newFileFullName = `${newFileName}【${i}】${newFileSuffix}`
-            newPath = path.join(this.getFileDir(filePath), newFileFullName)
+            newPath = path.join(module.exports.getFileDir(filePath), newFileFullName)
             exist = fs.existsSync(newPath)
             i++
         }
@@ -217,7 +212,7 @@ module.exports.renameFile = (filePath, newName, keepOrigName) => {
 // 解压文件
 module.exports.unzipFile = ({filePath, targetPath,password, deleteFileAfterUnzip}) => {
     const winRarPath = getConfig('winRarPath')||path.join(__dirname,'../static')
-    this.createDir(targetPath)//创建目录
+    module.exports.createDir(targetPath)//创建目录
     var exec = require('child_process').exec
     writeLog('解压文件：', `源文件：${filePath}`, `解压目录：${targetPath}`, '\n')
     var exec_path = `winrar x -or ${password ? ` -p${password}` : ''} "${filePath}" "${targetPath}"`
@@ -237,12 +232,12 @@ module.exports.unzipFile = ({filePath, targetPath,password, deleteFileAfterUnzip
 }
 // 压缩文件
 module.exports.zipFile = ({filePath, targetPath, password, deleteFileAfterzip}) => {
-    targetPath = targetPath||this.getFileDir(filePath)
-    let targetFilePath = path.join(targetPath,`${this.getFileName(filePath)}.rar`)
+    targetPath = targetPath||module.exports.getFileDir(filePath)
+    let targetFilePath = path.join(targetPath,`${module.exports.getFileName(filePath)}.rar`)
     let index = 1
-    this.createDir(targetPath)//创建目录
+    module.exports.createDir(targetPath)//创建目录
     while(fs.existsSync(targetFilePath)){
-        targetFilePath = path.join(targetPath,`${this.getFileName(filePath)}[${index}].rar`)
+        targetFilePath = path.join(targetPath,`${module.exports.getFileName(filePath)}[${index}].rar`)
         index++
     }
     const winRarPath = getConfig('winRarPath')||path.join(__dirname,'../static')
@@ -266,12 +261,12 @@ module.exports.zipFile = ({filePath, targetPath, password, deleteFileAfterzip}) 
 // 移动文件
 module.exports.moveFile = (filePath, targetDir) => {
     return new Promise((resolve, reject) => {
-        const fileName = this.getFileName(filePath)
-        const fullName = this.getFileFullName(filePath)
-        const suffix = this.getFileSuffix(filePath)
+        const fileName = module.exports.getFileName(filePath)
+        const fullName = module.exports.getFileFullName(filePath)
+        const suffix = module.exports.getFileSuffix(filePath)
         let newPath = path.join(path.resolve(targetDir), fullName)
         writeLog('移动文件：', `源文件：${filePath}`, `新目录：${targetDir}`, '\n')
-        this.createDir(targetDir)
+        module.exports.createDir(targetDir)
         let exist = fs.existsSync(newPath)
         let i = 1
         while (exist) {

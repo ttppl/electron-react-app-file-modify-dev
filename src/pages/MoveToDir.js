@@ -2,16 +2,17 @@ import {useEffect, useRef, useState} from "react";
 import RecursiveFileOperation from "../components/RecursiveFileOperation";
 import OperationButton from "../components/OperationButton";
 import {moveToDirOperation} from "../utils/oprations";
+import {electronApi} from "../utils/main";
 
 function MoveToDir() {
     const [targetDir,setTargetDir] = useState('')
     const selectTargetDir = async()=>{
-        const fp = await window.electronAPI.selectFilePath(targetDir)
+        const fp = await electronApi().selectFilePath(targetDir)
         setTargetDir(fp)
     }
 // 获取参数
     useEffect(() => {
-        window.electronAPI.getConfigs(['defaultPath','defaultMoveTargetPath']).then(para => {
+        electronApi().getConfigs(['defaultPath','defaultMoveTargetPath']).then(para => {
             ref.current.getFiles(para.defaultPath)
             setTargetDir(para.defaultMoveTargetPath)
         })

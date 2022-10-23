@@ -1,6 +1,7 @@
 import {useEffect, useRef} from "react";
 import RecursiveFileOperation from "../components/RecursiveFileOperation";
 import {renameUnzippableFileOperation} from "../utils/oprations";
+import {electronApi} from "../utils/main";
 
 function RenameUnZippableFile() {
     const unzippableFile = useRef()
@@ -10,7 +11,7 @@ function RenameUnZippableFile() {
     }
 // 获取参数
     useEffect(() => {
-        window.electronAPI.getConfigs(['defaultPath', 'zipFile']).then(para => {
+        electronApi().getConfigs(['defaultPath', 'zipFile']).then(para => {
             unzippableFile.current = para.zipFile
             filters.current = para.zipFile.map(n => n.suffix)
             ref.current.getFiles(para.defaultPath)

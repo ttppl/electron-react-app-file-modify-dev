@@ -18,7 +18,7 @@ function ZipFile() {
     //选择文件夹
     const selectFilePath = async () => {
         if (step === 1) {
-            const fp = await window.electronAPI.selectFilePath(fileRef.current.getFilePath())
+            const fp = await electronApi().selectFilePath(fileRef.current.getFilePath())
             if (fp) {
                 fileRef.current.setFilePath(fp)
             }
@@ -28,13 +28,13 @@ function ZipFile() {
     }
     const [targetFilePath, setTargetFilePath] = useState('')
     const selectTargetFilePath = async () => {
-        const fp = await window.electronAPI.selectFilePath(fileRef.current.getFilePath())
+        const fp = await electronApi().selectFilePath(fileRef.current.getFilePath())
         if (fp)
             setTargetFilePath(fp)
     }
     //获取默认参数
     useEffect(() => {
-        window.electronAPI.getConfigs(['defaultPath', 'zipPassword', 'deleteFileAfterzip','unzipableFile']).then(para => {
+        electronApi().getConfigs(['defaultPath', 'zipPassword', 'deleteFileAfterzip','unzipableFile']).then(para => {
             fileRef.current.setFilePath(para.defaultPath)
             setPassword(para.zipPassword)
             setUnzipPassword(para.zipPassword)

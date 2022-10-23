@@ -1,12 +1,13 @@
 import {useEffect, useRef} from "react";
 import RecursiveFileOperation from "../components/RecursiveFileOperation";
 import {renameToTopNameOperation} from "../utils/oprations";
+import {electronApi} from "../utils/main";
 
 function RenameToTopName() {
     const keepOrigName = useRef(false)
 // 获取参数
     useEffect(() => {
-        window.electronAPI.getConfigs(['defaultPath', 'keepOrigName']).then(para => {
+        electronApi().getConfigs(['defaultPath', 'keepOrigName']).then(para => {
             ref.current.getFiles(para.defaultPath)
             keepOrigName.current = para.keepOrigName
         })

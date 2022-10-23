@@ -1,4 +1,5 @@
 import {joinPath} from "./convert";
+import {electronApi} from "./main";
 
 export const renameUnzippableFileOperation = async ({files, setFiles,unzippableFile}) => {
     let find = false
@@ -7,7 +8,7 @@ export const renameUnzippableFileOperation = async ({files, setFiles,unzippableF
         if(type) {
             file.loading = true
             setFiles([...files])
-            await await window.electronAPI.renameFile(file.path, file.name + type.to)
+            await await electronApi().renameFile(file.path, file.name + type.to)
             file.done = true
             setFiles([...files])
             find = true
@@ -17,16 +18,16 @@ export const renameUnzippableFileOperation = async ({files, setFiles,unzippableF
 }
 
 export const unzipFileOperation = async ({files, setFiles,unzipableFile,multipleThreadUnzip}) => {
-    const deleteFileAfterUnzip = await window.electronAPI.getConfig('deleteFileAfterUnzip')
-    const password = await window.electronAPI.getConfig('unzipPassword')
+    const deleteFileAfterUnzip = await electronApi().getConfig('deleteFileAfterUnzip')
+    const password = await electronApi().getConfig('unzipPassword')
     for (let file of files) {
         if(unzipableFile.includes(file.suffix)) {
             file.loading = true
             setFiles([...files])
             if(!multipleThreadUnzip) {
-                await window.electronAPI.unzipFile({filePath:file.path, targetPath:file.parent,password, deleteFileAfterUnzip})
+                await electronApi().unzipFile({filePath:file.path, targetPath:file.parent,password, deleteFileAfterUnzip})
             }else{
-                window.electronAPI.unzipFile({filePath:file.path, targetPath:file.parent,password, deleteFileAfterUnzip})
+                electronApi().unzipFile({filePath:file.path, targetPath:file.parent,password, deleteFileAfterUnzip})
             }
             file.done = true
             setFiles([...files])
@@ -38,7 +39,7 @@ export const renameToTopNameOperation = async ({files, setFiles,keepOrigName}) =
     for (let file of files) {
         file.loading = true
         setFiles([...files])
-        await window.electronAPI.renameFile(file.path, file.topName + file.suffix, keepOrigName)
+        await electronApi().renameFile(file.path, file.topName + file.suffix, keepOrigName)
         file.done = true
         setFiles([...files])
     }
@@ -70,7 +71,7 @@ export const moveToDirOperation = async ({files, setFiles,targetDir}) => {
         if (typeArray.length > 1) {
             typePath = joinPath(targetDir, type, file.topName)
         }
-        await window.electronAPI.moveFile(file.path, typePath)
+        await electronApi().moveFile(file.path, typePath)
         file.done=true
         setFiles([...files])
     }

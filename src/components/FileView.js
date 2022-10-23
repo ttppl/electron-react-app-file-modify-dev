@@ -3,6 +3,7 @@ import '../styles/fileView.scss'
 import {getClass} from "../utils/dom";
 import Icon from "./Icon";
 import MultipleSelect from "./MultipleSelect";
+import {electronApi} from "../utils/main";
 
 //文件对象
 // {
@@ -41,13 +42,13 @@ function FileViewFun(props, ref) {
         setRecursive(!recursive)
     }
     useEffect(() => {
-        window.electronAPI.getFileDir(filePath).then(dir => {
+        electronApi().getFileDir(filePath).then(dir => {
             setParentDir(dir)
         })
     }, [])
     const getFiles = async (path, all) => {
         if (path) {
-            const files = Array.isArray(path)?path:await window.electronAPI.getFiles(path, all)
+            const files = Array.isArray(path)?path:await electronApi().getFiles(path, all)
             files.sort((a,b)=>{
                 if((a.dir&&b.dir)||(!a.dir&&!b.dir)){
                     return 0
@@ -61,7 +62,7 @@ function FileViewFun(props, ref) {
             }
             setFileSuffix(Array.from(suffix))
             setFiles(files)
-            const dir = await window.electronAPI.getFileDir(path)
+            const dir = Array.isArray(path)?'':await electronApi().getFileDir(path)
             setParentDir(dir)
         } else {
             setFiles([])
@@ -82,7 +83,7 @@ function FileViewFun(props, ref) {
     }), [filePath, files, recursive])
     // 返回上一级
     const goBack = async () => {
-        const path = await window.electronAPI.getFileDir(filePath)
+        const path = await electronApi().getFileDir(filePath)
         setFilePath(path)
         props.setFilePath?.(path)
         getFiles(path, recursive)

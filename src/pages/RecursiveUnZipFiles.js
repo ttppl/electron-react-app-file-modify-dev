@@ -1,6 +1,7 @@
 import {useEffect, useRef} from "react";
 import RecursiveFileOperation from "../components/RecursiveFileOperation";
 import {unzipFileOperation} from "../utils/oprations";
+import {electronApi} from "../utils/main";
 
 function RecursiveUnZipFiles() {
     const multipleThreadUnzip = useRef(false)
@@ -10,7 +11,7 @@ function RecursiveUnZipFiles() {
     }
 // 获取参数
     useEffect(() => {
-        window.electronAPI.getConfigs(['defaultPath', 'unzipableFile','multipleThreadUnzip']).then(para => {
+        electronApi().getConfigs(['defaultPath', 'unzipableFile','multipleThreadUnzip']).then(para => {
             filters.current = para.unzipableFile
             ref.current.getFiles(para.defaultPath)
             multipleThreadUnzip.current = para.multipleThreadUnzip
