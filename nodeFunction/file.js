@@ -105,6 +105,7 @@ module.exports.getDirFiles = function (filePath) {
                 parent: module.exports.getFileDir(subPath),
                 path: subPath
             }
+            files.push(fileModel)
             if (files.length > max) {
                 showDialogMsgDebounce(`文件过多！大于(${max})`)
                 return files
